@@ -1,0 +1,13 @@
+{
+  "name": "promptupatch-api-proxy",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "nodemailer": "^6.9.16"
+  }
+}

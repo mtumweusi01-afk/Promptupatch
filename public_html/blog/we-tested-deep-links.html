@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>We tested prompt deep-links on 19 tools. Here's what actually works | PromptuPatch</title>
+    <meta name="description" content="Only a handful of AI tools let you pass a prompt through the URL. We tried them all so you don't have to." />
+    <link rel="canonical" href="https://promptupatch.com/blog/we-tested-deep-links" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="PromptuPatch" />
+    <meta property="og:title" content="We tested prompt deep-links on 19 tools. Here's what actually works | PromptuPatch" />
+    <meta property="og:description" content="Only a handful of AI tools let you pass a prompt through the URL. We tried them all so you don't have to." />
+    <meta property="og:url" content="https://promptupatch.com/blog/we-tested-deep-links" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="We tested prompt deep-links on 19 tools. Here's what actually works | PromptuPatch" />
+    <meta name="twitter:description" content="Only a handful of AI tools let you pass a prompt through the URL. We tried them all so you don't have to." />
+    <meta property="article:published_time" content="2026-07-03" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptupatch.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://promptupatch.com/blog"},{"@type":"ListItem","position":3,"name":"We tested prompt deep-links on 19 tools. Here's what actually works","item":"https://promptupatch.com/blog/we-tested-deep-links"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"We tested prompt deep-links on 19 tools. Here's what actually works","description":"Only a handful of AI tools let you pass a prompt through the URL. We tried them all so you don't have to.","datePublished":"2026-07-03","dateModified":"2026-07-03","articleSection":"Under the hood","author":{"@type":"Organization","name":"PromptuPatch"},"publisher":{"@context":"https://schema.org","@type":"Organization","name":"PromptuPatch","url":"https://promptupatch.com/","logo":"https://promptupatch.com/apple-touch-icon.png"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://promptupatch.com/blog/we-tested-deep-links"}}</script>
+    <style>
+      #pp-pre{max-width:760px;margin:0 auto;padding:32px 20px;font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#1a1a1a}
+      #pp-pre h1{font-size:1.9rem;line-height:1.2;margin:0 0 .5rem}
+      #pp-pre h2{font-size:1.15rem;margin:1.6rem 0 .4rem}
+      #pp-pre a{color:#2b5cff}
+      #pp-pre nav{font-size:.85rem;opacity:.7;margin-bottom:1rem}
+      #pp-pre ul{padding-left:1.1rem}
+    </style>
+    <script>
+      // The SPA overwrites document.title with a generic per-route string.
+      // Lock the crawlable title until that is fixed at the source.
+      (function(){var t="We tested prompt deep-links on 19 tools. Here's what actually works | PromptuPatch";try{
+        new MutationObserver(function(){if(document.title!==t)document.title=t;})
+          .observe(document.querySelector("title"),{childList:true});
+      }catch(e){}})();
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3038027031767147" crossorigin="anonymous"></script>
+    <script type="module" crossorigin src="/assets/index-BLFRjWRo.js"></script>
+  </head>
+  <body>
+    <div id="root"><div id="pp-pre"><nav><a href="/">Home</a> › <a href="/blog">Blog</a> › We tested prompt deep-links on 19 tools. Here's what actually works</nav>
+<h1>We tested prompt deep-links on 19 tools. Here's what actually works</h1>
+<p><em>Under the hood · Jul 3, 2026</em></p>
+<p>When we built the hand-off feature, we assumed most AI tools would support some way of pre-filling a prompt through the URL. It's such an obvious integration point. We were wrong.</p>
+<p>Out of the nineteen tools currently in our directory, only four have a reliable, documented-or-stable query parameter that fills the input box on page load: ChatGPT, Claude, Perplexity, and Suno. A few others have parameters that half-work, work only for logged-in users, or worked last quarter and silently broke. We don't ship those, because a hand-off that fails is worse than no hand-off.</p>
+<p>The pattern among tools that do support it is interesting: they're all products that win when the friction of starting is low. Search-style tools especially. Perplexity treats a URL query the same way a search engine does, which makes sense given what it is.</p>
+<p>For everything else, we settled on the clipboard approach: we copy your prompt automatically and open the tool, so you're one paste away. It's not as slick, and we're honest about that in the interface. But it's dependable, and dependable beats clever.</p>
+<p>We re-test these links roughly monthly, because they break without announcement. When Suno changed its create-page URL structure earlier this year, our hand-off silently failed for about a week before we caught it. That incident is why the interface now tells you explicitly which behavior to expect from each tool, so nothing feels like a bug when it's actually a limitation.</p>
+<p>If you build with these deep-links yourself, one practical tip: always URL-encode the prompt, and test with prompts containing ampersands and question marks. Those two characters account for basically every breakage we've seen.</p>
+<h2>Keep reading</h2>
+<ul><li><a href="/blog/picking-the-right-tool">Why 'best AI tool' is the wrong question</a></li><li><a href="/blog/prompt-prefilling-explained">How prompt hand-off actually works</a></li><li><a href="/blog/rules-vs-ai-routing">Keyword rules first, AI second</a></li></ul>
+<p><a href="/blog">All posts</a> · <a href="/tools">Browse AI tools</a></p></div></div>
+  </body>
+</html>

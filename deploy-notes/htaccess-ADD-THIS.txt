@@ -1,0 +1,77 @@
+########################################################################
+#  PromptuPatch — SEO prerender rules
+#
+#  DO NOT REPLACE YOUR EXISTING .htaccess.
+#  Open public_html/.htaccess in cPanel File Manager and paste block A
+#  so it REPLACES ONLY your current <IfModule mod_rewrite.c> section.
+#  Leave every cPanel / Passenger line above and below it untouched.
+########################################################################
+
+
+# ============ BLOCK A — replaces your existing mod_rewrite block ============
+
+Options -MultiViews
+
+<IfModule mod_dir.c>
+  # Stop Apache 301-ing /tools to /tools/ before our rules can run
+  DirectorySlash Off
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Never touch the Node.js API — this must stay first.
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^ - [L]
+
+  # 2. Canonical host: force https + non-www, one hop, no redirect chains.
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://promptupatch.com%{REQUEST_URI} [L,R=301]
+
+  # 3. Strip trailing slashes (except root) so /blog/ and /blog aren't two URLs.
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+  # 4. Serve the prerendered static HTML when one exists for this path.
+  #    /tools/chatgpt  ->  /tools/chatgpt.html
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+?)/?$ /$1.html [L]
+
+  # 5. Anything else that isn't a real file falls back to the SPA.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+
+# ============ BLOCK B — append at the very end of .htaccess ============
+# Core Web Vitals: compression + cache headers. Safe to add as-is.
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE application/xml image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Hashed bundles never change — cache them hard.
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css              "access plus 1 year"
+  ExpiresByType image/svg+xml         "access plus 1 month"
+  ExpiresByType image/png             "access plus 1 month"
+  # HTML must revalidate or your SEO fixes won't propagate.
+  ExpiresByType text/html             "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>
