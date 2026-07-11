@@ -1,4 +1,4 @@
-/**
+﻿/**
  * PromptuPatch API proxy.
  * Keeps your Anthropic API key on the server — NEVER put the key in frontend code.
  *
@@ -92,9 +92,12 @@ const SMTP_USER = process.env.CONTACT_SMTP_USER;
 const SMTP_PASS = process.env.CONTACT_SMTP_PASS;
 const CONTACT_TO = process.env.CONTACT_TO || SMTP_USER;
 
+// On Namecheap shared hosting, connect via the SERVER hostname (matches its
+// SSL cert), not mail.<yourdomain>. Override with SMTP_HOST env var if needed.
+const SMTP_HOST = process.env.SMTP_HOST || "server301.web-hosting.com";
 const mailer = SMTP_USER && SMTP_PASS
   ? nodemailer.createTransport({
-      host: "mail.promptupatch.com",
+      host: SMTP_HOST,
       port: 465,
       secure: true,
       auth: { user: SMTP_USER, pass: SMTP_PASS },
