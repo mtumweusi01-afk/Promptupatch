@@ -69,7 +69,7 @@ app.post("/api/claude", rateLimit, async (req, res) => {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: model || "claude-sonnet-4-5",
+        model: model || "claude-sonnet-5",
         max_tokens: Math.min(Number(max_tokens) || 700, 1500),
         messages,
       }),
