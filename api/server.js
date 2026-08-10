@@ -2,12 +2,19 @@
  * PromptuPatch API proxy.
  * Keeps your Anthropic API key on the server — NEVER put the key in frontend code.
  *
- * Set the ANTHROPIC_API_KEY environment variable in cPanel's
- * "Setup Node.js App" > Environment Variables before starting.
+ * Deployed on Vercel (project root = this api/ folder) as api.promptupatch.com.
+ * Set ANTHROPIC_API_KEY, CONTACT_SMTP_USER, CONTACT_SMTP_PASS, CONTACT_TO
+ * in the Vercel project's Environment Variables before deploying.
  */
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
+app.use(
+  cors({
+    origin: ["https://promptupatch.com", "https://www.promptupatch.com"],
+  })
+);
 app.use(express.json({ limit: "1mb" }));
 
 const API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -143,4 +150,11 @@ app.post("/api/contact", rateLimit, async (req, res) => {
 
 app.get("/api/health", (req, res) => res.json({ ok: true, mode: MOCK ? "mock" : "live", mail: mailer ? "configured" : "not configured" }));
 
-app.listen(PORT, () => console.log(`API proxy listening on ${PORT}`));
+// Vercel imports this file as a serverless function and calls the exported
+// app directly — it never runs `node server.js`, so app.listen() only fires
+// when running standalone (e.g. still on cPanel, or local dev).
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`API proxy listening on ${PORT}`));
+}
+
+module.exports = app;

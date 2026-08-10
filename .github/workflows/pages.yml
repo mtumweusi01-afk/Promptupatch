@@ -1,0 +1,67 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public_html/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Pages artifact
+        run: |
+          set -e
+          STAGE="$RUNNER_TEMP/pages-stage"
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+          cp -R public_html/. "$STAGE/"
+
+          # Disable Jekyll processing
+          touch "$STAGE/.nojekyll"
+
+          # Custom domain
+          echo "promptupatch.com" > "$STAGE/CNAME"
+
+          # SPA fallback for unmatched routes
+          cp "$STAGE/index.html" "$STAGE/404.html"
+
+          # Duplicate every prerendered <name>.html into <name>/index.html
+          # so clean URLs (e.g. /tools/chatgpt) resolve via directory-index
+          # serving, matching the old .htaccess "serve <route>.html" rule.
+          find "$STAGE" -type f -name "*.html" \
+            ! -name "index.html" ! -name "404.html" | while read -r f; do
+            rel="${f#$STAGE/}"
+            name="${rel%.html}"
+            mkdir -p "$STAGE/$name"
+            cp "$f" "$STAGE/$name/index.html"
+          done
+
+          echo "STAGE_DIR=$STAGE" >> "$GITHUB_ENV"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.STAGE_DIR }}
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
